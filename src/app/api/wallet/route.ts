@@ -1,8 +1,8 @@
 // src/app/api/wallets/route.ts
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/authOption";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { authOptions } from "@/lib/authOption";
 
 // Fetch wallets
 export async function GET() {

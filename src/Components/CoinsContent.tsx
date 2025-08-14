@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import { X, Copy } from "lucide-react";
+import Image from "next/image";
 
 interface Coin {
   id: string;
@@ -72,11 +73,13 @@ export default function CoinsContent() {
               className="flex items-center w-full h-full cursor-pointer"
               onClick={() => router.push(`/dashboard/coin/${coin.id}`)}
             >
-              <img
+{/*               <Image
                 src={coin.image}
                 alt={coin.name}
+                width={48}
+                height={48}
                 className="w-12 h-12 rounded-full mr-4"
-              />
+              /> */}
               <div>
                 <div className="text-lg font-bold text-white">{coin.name}</div>
                 <div className="text-sm text-gray-400">{coin.symbol}</div>

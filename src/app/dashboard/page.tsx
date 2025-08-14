@@ -1,11 +1,14 @@
-import React from 'react'
+import CoinsContent from "@/Components/CoinsContent";
+import WalletBalance from "@/Components/WalletBalance";
+import WalletHeader from "@/Components/WalletHeader";
 
-const page = () => {
+
+export default function DashboardPage() {
   return (
-    <div>
-      Dashboard page
-    </div>
-  )
+    <main className="max-w-3xl w-full mx-auto flex flex-col items-center">
+      <WalletHeader />
+      <WalletBalance />
+      <CoinsContent />
+    </main>
+  );
 }
-
-export default page

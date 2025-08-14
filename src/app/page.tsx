@@ -60,11 +60,7 @@ export default function StackWalletLanding(){
               <div className="relative">
                 <div className="absolute -right-12 -top-8 w-[260px] h-[360px] md:w-[360px] md:h-[480px] rounded-3xl overflow-hidden shadow-2xl transform rotate-6 bg-gradient-to-br from-pink-300 via-purple-300 to-blue-200"></div>
 
-                <img
-                  alt="stack-art"
-                  src="/assets/welcome-art.png"
-                  className="relative w-full h-auto rounded-2xl shadow-xl object-cover"
-                />
+                
 
                 <div className="hidden md:block absolute left-0 bottom-0 w-56 h-56 transform -translate-x-24 translate-y-10 rotate-12 bg-indigo-200 opacity-30 rounded"></div>
               </div>

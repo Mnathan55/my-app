@@ -4,11 +4,8 @@ import { getServerSession } from "next-auth";
 import prisma from "../../../../../lib/prisma";
 import { authOptions } from "../../../../../lib/authOptions";
 
-interface Params {
-  params: { id: string };
-}
 
-export async function GET(req: Request, { params }: Params) {
+export async function GET(req: Request, { params }: { params: Promise<{id: string}>}) {
   const session = await getServerSession(authOptions);
 
   // Still ensure request is authenticated

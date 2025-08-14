@@ -65,7 +65,7 @@ export type Wallet = {
   updatedAt: Date;
 
   userId: string;
-  user: User;
+  user?: User;
   transactions: Transaction[];
 };
 
@@ -77,7 +77,7 @@ export type Transaction = {
   updatedAt: Date;
 
   walletId: string;
-  wallet: Wallet;
+  wallet?: Wallet;
 };
 
 }

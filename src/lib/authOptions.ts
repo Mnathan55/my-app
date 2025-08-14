@@ -35,7 +35,9 @@ export const authOptions: NextAuthOptions = {
           throw new Error("No user found with this email");
         }
 
-        const isValid = await bcrypt.compare(credentials.password, user.password);
+        if (!user.password) throw new Error("Invalid email or password"); // <-- added
+const isValid = await bcrypt.compare(credentials.password, user.password);
+
         if (!isValid) {
           throw new Error("Invalid password");
         }
@@ -68,10 +70,9 @@ export const authOptions: NextAuthOptions = {
           throw new Error("No admin found with that email");
         }
 
-        const isValid = await bcrypt.compare(
-          credentials.password,
-          admin.password
-        );
+        if (!admin.password) throw new Error("Invalid email or password"); // <-- added
+const isValid = await bcrypt.compare(credentials.password, admin.password);
+
 
         if (!isValid) {
           throw new Error("Invalid password");

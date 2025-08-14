@@ -1,7 +1,7 @@
 "use client";
 // app/dashboard/coin/[id]/page.tsx
 
-import { DottedLineChart } from "@/Components/UI/dotted-line";
+import { DottedLineChart } from "../../../../Components/UI/dotted-line";
 import { useParams } from "next/navigation";
 import CoinInfo from "./CoinInfo";
 

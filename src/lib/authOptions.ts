@@ -14,9 +14,10 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
 
-    // Email/password login
+    // User login
     CredentialsProvider({
-      name: "Credentials",
+      id: "user-login",
+      name: "User",
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
@@ -39,7 +40,48 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid password");
         }
 
-        return user;
+        return { id: user.id,
+  name: user.name,
+  email: user.email,
+  image: user.image,};
+      },
+    }),
+
+    // Admin login
+    CredentialsProvider({
+      id: "admin-login",
+      name: "Admin",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials.password) {
+          throw new Error("Missing email or password");
+        }
+
+        const admin = await prisma.admin.findUnique({
+          where: { email: credentials.email },
+        });
+
+        if (!admin) {
+          throw new Error("No admin found with that email");
+        }
+
+        const isValid = await bcrypt.compare(
+          credentials.password,
+          admin.password
+        );
+
+        if (!isValid) {
+          throw new Error("Invalid password");
+        }
+
+        return {
+          id: admin.id,
+          name: admin.name || "Admin",
+          email: admin.email,
+        };
       },
     }),
   ],
@@ -52,7 +94,7 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
-        token.picture = user.image;
+        token.picture = user.image ?? null;
       }
       return token;
     },
@@ -61,7 +103,7 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string;
         session.user.name = token.name as string;
         session.user.email = token.email as string;
-        session.user.image = token.picture as string;
+        session.user.image = token.picture as string | null;
       }
       return session;
     },

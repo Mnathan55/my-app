@@ -13,7 +13,7 @@ export default function LoginPageInner() {
 
   const handleEmailPasswordSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    await signIn("credentials", {
+    await signIn("user-login", {
       email,
       password,
       redirect: true,

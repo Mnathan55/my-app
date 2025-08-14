@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import { X, Copy } from "lucide-react";
-import Image from "next/image";
 
 interface Coin {
   id: string;

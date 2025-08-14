@@ -32,12 +32,11 @@ export type User = {
   email: string;
   emailVerified?: Date | null;
   image?: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-
-  wallets: Wallet[];
-  accounts: Account[];
-  sessions: Session[];
+  createdAt?: Date;
+  updatedAt?: Date;
+  wallets?: Wallet[];
+  accounts?: Account[];
+  sessions?: Session[];
 };
 
 export type Account = {

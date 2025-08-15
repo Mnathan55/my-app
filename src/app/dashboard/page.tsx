@@ -1,4 +1,4 @@
-import TabbedSection from "@/Components/TabbedSection";
+import TabbedSection from "../../Components/TabbedSection";
 import WalletBalance from "../../Components/WalletBalance";
 import WalletHeader from "../../Components/WalletHeader";
 

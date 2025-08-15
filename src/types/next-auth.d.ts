@@ -61,10 +61,10 @@ export type Wallet = {
   chain: string;
   address: string;
   balance: Decimal;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 
-  userId: string;
+  userId?: string;
   user?: User;
   transactions: Transaction[];
 };
@@ -79,5 +79,10 @@ export type Transaction = {
   walletId: string;
   wallet?: Wallet;
 };
+
+export interface TotalBalance {
+  total: number;
+}
+
 
 }

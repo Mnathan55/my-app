@@ -1,14 +1,22 @@
 "use client";
 import React, { useState } from "react";
-import { Wallet, DollarSign } from "lucide-react";
 import WalletList from "./WalletList";
 import CoinsContent from "./CoinsContent";
+import { Wallet } from "next-auth";
+import { Wallet as WalletIcon, DollarSign } from "lucide-react";
 
-const TabbedSection = () => {
+
+interface WalletListProps {
+  wallets: Wallet[];
+  setWallets: React.Dispatch<React.SetStateAction<Wallet[]>>;
+}
+
+
+const TabbedSection: React.FC<WalletListProps> = ({ wallets, setWallets }) => {
   const [activeTab, setActiveTab] = useState("wallet");
 
   return (
-    <div className="bg-[#111] text-white flex flex-col min-h-screen w-full max-w-4xl mx-auto p-2 rounded-lg shadow-lg">
+    <div className="bg-[#111] text-white flex flex-col min-h-screen w-full max-w-4xl mx-auto p-2">
       {/* Tabs */}
       <nav
         className="flex border-b border-gray-700"
@@ -16,7 +24,7 @@ const TabbedSection = () => {
         aria-label="Wallet tabs"
       >
         {[
-          { id: "wallet", label: "Wallets", Icon: Wallet },
+          { id: "wallet", label: "Wallets", Icon: WalletIcon },
           { id: "coins", label: "Coins", Icon: DollarSign },
         ].map(({ id, label, Icon }) => {
           const isActive = activeTab === id;
@@ -41,18 +49,15 @@ const TabbedSection = () => {
           );
         })}
       </nav>
-
-      {/* Content */}
-      <section
-        id={`${activeTab}-tab`}
-        role="tabpanel"
-        aria-labelledby={`${activeTab}-tab-btn`}
-        className="py-6 px-2"
-      >
-        {activeTab === "wallet" ? <WalletList /> : <CoinsContent /> }
+      
+      <section className="py-6 px-2">
+        {activeTab === "wallet" ? (
+          <WalletList wallets={wallets} setWallets={setWallets} />
+        ) : (
+          <CoinsContent />
+        )}
       </section>
     </div>
   );
 };
-
 export default TabbedSection;

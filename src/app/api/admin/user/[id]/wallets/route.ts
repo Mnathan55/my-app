@@ -23,10 +23,13 @@ export async function POST(req: Request, { params }: { params: Promise<{id: stri
     });
 
     return NextResponse.json(newWallet);
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error(err);
-    return new NextResponse(err.message || "Internal Server Error", {
-      status: 500,
-    });
+    if (err instanceof Error) {
+      return new NextResponse(err.message || "Internal Server Error", {
+        status: 500,
+      });
+    }
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

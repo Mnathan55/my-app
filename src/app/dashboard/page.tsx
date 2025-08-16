@@ -5,13 +5,14 @@ import { useSession } from "next-auth/react";
 import TabbedSection from "../../Components/TabbedSection";
 import WalletBalance from "../../Components/WalletBalance";
 import WalletHeader from "../../Components/WalletHeader";
+import { Transaction } from "next-auth";
 
 interface Wallet {
   id: string;
   chain: string;
   address: string;
   balance: string;
-  transactions: any[];
+  transactions: Transaction[];
 }
 
 export default function DashboardPage() {

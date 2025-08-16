@@ -1,5 +1,4 @@
 "use client";
-//src/app/admin/dashboard/AdminPage.tsx
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -39,37 +38,70 @@ function AdminDashboard() {
   }, []);
 
   if (loading) {
-    return <p className="text-center text-white">Loading users...</p>;
+    return (
+      <div className="flex items-center justify-center min-h-screen text-gray-300">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-500"></div>
+      </div>
+    );
   }
 
   return (
-    <div className="p-6 text-white">
-      <h1 className="text-3xl font-bold mb-4">Admin Dashboard</h1>
-      <table className="min-w-full bg-[#111] border border-gray-700 rounded-lg">
-        <thead className="bg-gray-800">
-          <tr>
-            <th className="p-3 text-left">Name</th>
-            <th className="p-3 text-left">Email</th>
-            <th className="p-3 text-left">Wallets</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr
-              key={user.id}
-              className="cursor-pointer hover:bg-gray-700"
-              onClick={() => router.push(`/admin/user/${user.id}`)}
-            >
-              <td className="p-3">{user.name || "No Name"}</td>
-              <td className="p-3">{user.email || "No Email"}</td>
-              <td className="p-3">{user.wallets.length}</td>
+    <div className="p-8 text-gray-100 min-h-screen bg-gradient-to-b from-[#0d0d0d] to-[#1a1a1a]">
+      <h1 className="text-4xl font-extrabold mb-8 text-indigo-400">
+        Admin Dashboard
+      </h1>
+
+      <div className="overflow-hidden rounded-xl shadow-lg border border-gray-800 bg-[#111]">
+        <table className="min-w-full divide-y divide-gray-700">
+          <thead className="bg-gray-900/70">
+            <tr>
+              <th className="p-4 text-left text-sm font-semibold text-gray-300">
+                Name
+              </th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-300">
+                Email
+              </th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-300">
+                Wallets
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-gray-800">
+            {users.map((user) => (
+              <tr
+                key={user.id}
+                className="transition-colors duration-200 hover:bg-gray-800/60 cursor-pointer"
+                onClick={() => router.push(`/admin/user/${user.id}`)}
+              >
+                <td className="p-4 text-sm font-medium text-gray-200">
+                  {user.name || (
+                    <span className="italic text-gray-500">No Name</span>
+                  )}
+                </td>
+                <td className="p-4 text-sm text-gray-400">
+                  {user.email || (
+                    <span className="italic text-gray-500">No Email</span>
+                  )}
+                </td>
+                <td className="p-4">
+                  <span
+                    className={`px-3 py-1 text-xs font-medium rounded-full ${
+                      user.wallets.length > 0
+                        ? "bg-indigo-500/20 text-indigo-400"
+                        : "bg-gray-700/50 text-gray-400"
+                    }`}
+                  >
+                    {user.wallets.length} Wallet
+                    {user.wallets.length !== 1 ? "s" : ""}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
-
 
 export default AdminDashboard;

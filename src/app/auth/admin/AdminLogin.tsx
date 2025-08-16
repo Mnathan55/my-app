@@ -10,16 +10,12 @@ export default function AdminLogin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await signIn("credentials", {
-      redirect: false,
+    await signIn("admin-login", {
       email,
       password,
+      redirect: true,
+      callbackUrl: "/admin/dashboard",
     });
-    if (res?.error) {
-      setError(res.error);
-    } else {
-      window.location.href = "/admin/dashboard";
-    }
   };
 
   return (

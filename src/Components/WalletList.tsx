@@ -107,24 +107,21 @@ const WalletList: React.FC<WalletListProps> = ({ wallets, setWallets }) => {
                 </div>
 
                 {/* Balance */}
-<div className="text-right">
-  <span className="text-white font-semibold">
-    {Number(wallet.balance).toLocaleString()}
-  </span>
-  <span className="text-xs text-gray-400 block">
-    ({Number(convertedValue).toLocaleString()} $)
-  </span>
-</div>
-
+                <div className="text-right">
+                  <span className="text-white font-semibold">
+                    {Number(wallet.balance).toLocaleString()}
+                  </span>
+                  <span className="text-xs text-gray-400 block">
+                    ({Number(convertedValue).toLocaleString()} $)
+                  </span>
+                </div>
               </div>
 
               {/* Address (click to toggle) */}
               <p
                 className="text-xs break-all text-gray-400 cursor-pointer mt-2 hover:text-gray-200 transition-colors duration-150"
                 onClick={() =>
-                  setOpenWalletId(
-                    openWalletId === wallet.id ? null : wallet.id
-                  )
+                  setOpenWalletId(openWalletId === wallet.id ? null : wallet.id)
                 }
               >
                 Address:{" "}
@@ -145,28 +142,6 @@ const WalletList: React.FC<WalletListProps> = ({ wallets, setWallets }) => {
       >
         {showForm ? "Close" : "Add Wallet"}
       </button>
-
-      {showForm && (
-        <form onSubmit={handleAddWallet} className="mt-2 flex flex-col gap-2">
-          <input
-            placeholder="CoinGecko ID (e.g., bitcoin)"
-            value={chain}
-            onChange={(e) => setChain(e.target.value)}
-            className="p-2 rounded bg-[#222]"
-            required
-          />
-          <input
-            placeholder="Address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            className="p-2 rounded bg-[#222]"
-            required
-          />
-          <button type="submit" className="bg-green-600 p-2 rounded mt-1">
-            Add Wallet
-          </button>
-        </form>
-      )}
     </div>
   );
 };

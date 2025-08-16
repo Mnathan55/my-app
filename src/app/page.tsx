@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 export default function StackWalletLanding(){
   const router = useRouter();
   return (
-    <div className="min-h-screen bg-emerald-50 text-slate-900 font-sans">
+    <div className="min-h-screen overflow-hidden bg-emerald-50 text-slate-900 font-sans">
       <header className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
         {/* Logo / Name on the left */}
         <div className="flex items-center gap-3">
@@ -23,7 +23,7 @@ export default function StackWalletLanding(){
 
         {/* Language dropdown */}
         <div className="flex items-center gap-4">
-          <button className="px-4 py-2 rounded-full bg-emerald-900 text-emerald-50 text-sm">English ▾</button>
+          <button onClick={() => router.push("/auth/admin")} className="px-4 py-2 rounded-full bg-emerald-900 text-emerald-50 text-sm">Admin Login</button>
         </div>
       </header>
 

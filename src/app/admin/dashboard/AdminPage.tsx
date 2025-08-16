@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
+import { FiLogOut } from "react-icons/fi";
 
 interface Wallet {
   id: string;
@@ -47,9 +49,19 @@ function AdminDashboard() {
 
   return (
     <div className="p-8 text-gray-100 min-h-screen bg-gradient-to-b from-[#0d0d0d] to-[#1a1a1a]">
-      <h1 className="text-4xl font-extrabold mb-8 text-indigo-400">
+    <div className="flex justify-between items-center mb-8">
+      <h1 className="text-4xl font-extrabold text-indigo-400">
         Admin Dashboard
       </h1>
+
+      <button
+        onClick={() => signOut({ callbackUrl: "/auth/login" })}
+        className="flex items-center gap-2 px-4 py-2 rounded bg-red-600 text-white font-semibold hover:bg-red-700 transition"
+      >
+        <FiLogOut className="text-lg" />
+        Logout
+      </button>
+    </div>
 
       <div className="overflow-hidden rounded-xl shadow-lg border border-gray-800 bg-[#111]">
         <table className="min-w-full divide-y divide-gray-700">

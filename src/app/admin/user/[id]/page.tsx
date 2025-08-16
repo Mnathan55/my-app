@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
+import { FiArrowLeft, FiLogOut } from "react-icons/fi";
 
 interface Transaction {
   id: string;
@@ -26,6 +28,7 @@ interface User {
 
 const AdminUserPage = () => {
   const { id } = useParams();
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -110,6 +113,23 @@ const AdminUserPage = () => {
 
   return (
     <div className="p-8 min-h-screen bg-gradient-to-b from-[#0d0d0d] to-[#1a1a1a] text-gray-100">
+      {/* Header with Back + Logout */}
+      <div className="flex justify-between items-center mb-6">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-700 text-sm text-white hover:bg-gray-600 transition"
+        >
+          <FiArrowLeft /> Back
+        </button>
+
+        <button
+          onClick={() => signOut({ callbackUrl: "/auth/login" })}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-sm text-white hover:bg-red-700 transition"
+        >
+          <FiLogOut /> Logout
+        </button>
+      </div>
+
       <h1 className="text-3xl font-bold text-indigo-400 mb-2">
         {user.name || "No Name"}
       </h1>

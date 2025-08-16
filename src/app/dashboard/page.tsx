@@ -28,10 +28,12 @@ export default function DashboardPage() {
   }, [userId]);
 
   return (
-    <main className="max-w-3xl w-full mx-auto flex flex-col items-center">
-      <WalletHeader />
-      <WalletBalance/>
-      <TabbedSection wallets={wallets} setWallets={setWallets} />
+    <main className="w-full bg-black">
+      <div className="max-w-3xl bg-[#111] w-full overflow-x-hidden mx-auto flex flex-col items-center">
+        <WalletHeader />
+        <WalletBalance />
+        <TabbedSection wallets={wallets} setWallets={setWallets} />
+      </div>
     </main>
   );
 }

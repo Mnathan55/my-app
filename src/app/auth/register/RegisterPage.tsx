@@ -1,31 +1,33 @@
 "use client";
 
-import React, { useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-export default function LoginPageInner() {
-  const searchParams = useSearchParams();
-  const error = searchParams.get("error");
-
+export default function RegisterPage() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleEmailPasswordSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await signIn("user-login", {
-      email,
-      password,
-      redirect: true,
-      callbackUrl: "/dashboard",
-    });
-  };
+  const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
 
-  // const handleGoogleSignIn = () => {
-  //   signIn("google", { callbackUrl: "/dashboard" });
-  // };
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+    });
+
+    if (res.ok) {
+      router.push("/auth/login");
+    } else {
+      const data = await res.json();
+      setError(data.error || "Registration failed");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-indigo-900 flex flex-col">
@@ -56,15 +58,20 @@ export default function LoginPageInner() {
             alt="Stack Wallet Logo"
             className="w-24 h-24 mx-auto mb-6"
           />
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Welcome Back!</h1>
-          <p className="mb-6 text-gray-600">Sign in to your account</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Create Account</h1>
+          <p className="mb-6 text-gray-600">Sign up to get started</p>
 
-          {error && (
-            <p className="text-red-600 text-sm mb-4">{error}</p>
-          )}
+          {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
 
-          {/* Email/Password Form */}
-          <form onSubmit={handleEmailPasswordSignIn} className="space-y-4">
+          <form onSubmit={handleRegister} className="space-y-4">
+            <input
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="w-full border rounded-lg px-3 py-2"
+            />
             <input
               type="email"
               placeholder="Email"
@@ -85,18 +92,17 @@ export default function LoginPageInner() {
               type="submit"
               className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-500"
             >
-              Sign in with Email
+              Register
             </button>
           </form>
 
           <div className="my-4 text-gray-400">OR</div>
 
-          {/* Google Button */}
           <button
-          onClick={()=>{router.push("/auth/register")}}
+            onClick={() => router.push("/auth/login")}
             className="w-full flex items-center justify-center gap-3 bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-gray-800"
           >
-            Register
+            Back to Login
           </button>
         </div>
       </main>

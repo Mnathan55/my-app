@@ -5,9 +5,10 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string; walletId: string } }
+  { params }: { params: Promise<{ id: string; walletId: string }> }
 ) {
-  const { walletId } = params;
+  const { walletId } = await params;
+
   const body = await req.json();
   const { balance } = body;
 
@@ -25,7 +26,7 @@ export async function PATCH(
 
     return NextResponse.json(updatedWallet);
   } catch (err: any) {
-    console.error(err);
+    console.error("Error updating wallet:", err);
     return new NextResponse(err.message || "Failed to update wallet", {
       status: 500,
     });

@@ -135,13 +135,6 @@ const WalletList: React.FC<WalletListProps> = ({ wallets, setWallets }) => {
           );
         })}
       </ul>
-
-      <button
-        className="mt-4 px-4 py-2 bg-blue-600 rounded"
-        onClick={() => setShowForm(!showForm)}
-      >
-        {showForm ? "Close" : "Add Wallet"}
-      </button>
     </div>
   );
 };

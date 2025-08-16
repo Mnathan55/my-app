@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { FiArrowLeft, FiLogOut } from "react-icons/fi";
+import toast from "react-hot-toast";
 
 interface Transaction {
   id: string;
@@ -38,7 +39,16 @@ const AdminUserPage = () => {
 
   const [editingWalletId, setEditingWalletId] = useState<string | null>(null);
 
-  // Fetch user data
+  // ✅ disallow negatives and ensure a proper decimal > 0
+  const isPositiveDecimal = (v: string) =>
+    /^(?:0|[1-9]\d*)(?:\.\d+)?$/.test(v) && parseFloat(v) > 0;
+
+  // ✅ block bad keys for number inputs (e/E/+/-)
+  const blockInvalidNumberKeys = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
+  };
+
+  // ✅ Fetch user data
   useEffect(() => {
     async function fetchUser() {
       try {
@@ -69,8 +79,13 @@ const AdminUserPage = () => {
     fetchUser();
   }, [id]);
 
-  // Handle adding wallet
+  // ✅ Handle adding wallet
   const handleAddWallet = async () => {
+    if (!chain) return toast.error("Please select a coin.");
+    if (!address.trim()) return toast.error("Please enter an address.");
+    if (!isPositiveDecimal(balance))
+      return toast.error("Balance must be a positive number.");
+
     try {
       const res = await fetch(`/api/admin/user/${id}/wallets`, {
         method: "POST",
@@ -105,7 +120,7 @@ const AdminUserPage = () => {
 
   if (loading)
     return (
-      <div className="flex items-center justify-center min-h-screen text-gray-300">
+      <div className="flex items-center justify-center bg-[#111] min-h-screen text-gray-300">
         <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-500"></div>
       </div>
     );
@@ -145,7 +160,6 @@ const AdminUserPage = () => {
             className="w-full p-2 rounded-lg bg-gray-800 border border-gray-700 focus:ring focus:ring-indigo-500 text-sm"
             value={chain}
             onChange={(e) => setChain(e.target.value)}
-            required
           >
             <option value="">Select Coin</option>
             <option value="bitcoin">Bitcoin</option>
@@ -165,10 +179,14 @@ const AdminUserPage = () => {
 
           <input
             className="w-full p-2 rounded-lg bg-gray-800 border border-gray-700 focus:ring focus:ring-indigo-500 text-sm"
-            type="text"
+            type="number"
+            inputMode="decimal"
+            step="any"
+            min="0"
             placeholder="Balance"
             value={balance}
-            onChange={(e) => setBalance(e.target.value)}
+            onKeyDown={blockInvalidNumberKeys}
+            onChange={(e) => setBalance(e.target.value.trim())}
           />
 
           <button
@@ -203,27 +221,40 @@ const AdminUserPage = () => {
                 {isEditing ? (
                   <>
                     <input
-                      type="text"
+                      type="number"
+                      inputMode="decimal"
+                      step="any"
+                      min="0"
                       value={wallet.balance}
+                      onKeyDown={blockInvalidNumberKeys}
                       onChange={(e) => {
                         const newBalance = e.target.value;
-                        setUser((prev) =>
-                          prev
-                            ? {
-                                ...prev,
-                                wallets: prev.wallets.map((w) =>
-                                  w.id === wallet.id
-                                    ? { ...w, balance: newBalance }
-                                    : w
-                                ),
-                              }
-                            : null
-                        );
+                        if (
+                          newBalance === "" ||
+                          isPositiveDecimal(newBalance)
+                        ) {
+                          setUser((prev) =>
+                            prev
+                              ? {
+                                  ...prev,
+                                  wallets: prev.wallets.map((w) =>
+                                    w.id === wallet.id
+                                      ? { ...w, balance: newBalance }
+                                      : w
+                                  ),
+                                }
+                              : null
+                          );
+                        }
                       }}
                       className="p-2 rounded bg-gray-800 border border-gray-700 text-sm"
                     />
                     <button
                       onClick={async () => {
+                        if (!isPositiveDecimal(wallet.balance)) {
+                          alert("Balance must be a positive number.");
+                          return;
+                        }
                         try {
                           const res = await fetch(
                             `/api/admin/user/${id}/wallets/${wallet.id}`,
@@ -297,10 +328,7 @@ const AdminUserPage = () => {
                 ) : (
                   <ul className="space-y-1 text-sm text-gray-400">
                     {wallet.transactions.map((tx) => (
-                      <li
-                        key={tx.id}
-                        className="bg-gray-800/50 p-2 rounded-md"
-                      >
+                      <li key={tx.id} className="bg-gray-800/50 p-2 rounded-md">
                         <span className="font-medium text-white">
                           {tx.type}
                         </span>{" "}

@@ -237,11 +237,6 @@ export default function SellPage() {
             >
               {selectedAsset ? (
                 <div className="flex items-center gap-3">
-                  <img
-                    src={selectedAsset.image}
-                    alt={selectedAsset.name}
-                    className="w-7 h-7"
-                  />
                   <div>
                     <p className="text-white font-medium">
                       {selectedAsset.name}

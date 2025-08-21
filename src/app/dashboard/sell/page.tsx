@@ -258,7 +258,7 @@ export default function SellPage() {
       {/* Asset Modal */}
       {showAssetModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="max-w-sm h-[80vh] w-full bg-[#111] border-gray-800 rounded-2xl shadow-lg flex flex-col">
+          <div className="h-screen w-full md:max-w-sm md:h-[80vh] bg-[#111] border-gray-800 rounded-2xl shadow-lg flex flex-col">
             <div className="p-4 flex justify-between items-center border-b border-gray-700">
               <h2 className="text-white text-lg font-semibold">Select Asset</h2>
               <button

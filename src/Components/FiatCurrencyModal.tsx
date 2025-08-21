@@ -43,7 +43,7 @@ export default function FiatCurrencyModal({ show, onClose, onSelect }: FiatCurre
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
       {/* Modal Card */}
-      <div className="max-w-sm h-[80vh] w-full bg-[#111] border-gray-800rounded-2xl shadow-lg flex flex-col">
+      <div className="h-screen w-full md:max-w-sm md:h-[80vh] bg-[#111] border-gray-800rounded-2xl shadow-lg flex flex-col">
         {/* Header */}
         <div className="flex justify-between items-center p-4 border-b border-gray-800">
           <h2 className="text-white font-semibold text-lg">Select Fiat Currency</h2>

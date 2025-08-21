@@ -19,9 +19,6 @@ const WalletList: React.FC<WalletListProps> = ({ wallets, setWallets }) => {
 
   const [prices, setPrices] = useState<Record<string, number>>({});
   const [openWalletId, setOpenWalletId] = useState<string | null>(null);
-  const [showForm, setShowForm] = useState(false);
-  const [chain, setChain] = useState("");
-  const [address, setAddress] = useState("");
 
   // Fetch prices and update total balance
   useEffect(() => {
@@ -56,35 +53,23 @@ const WalletList: React.FC<WalletListProps> = ({ wallets, setWallets }) => {
       .catch((err) => console.error("Price fetch error:", err));
   }, [wallets, dispatch]);
 
-  const handleAddWallet = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!userId) return;
-
-    try {
-      const res = await fetch(`/api/wallet`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, chain, address }),
-      });
-      if (!res.ok) throw new Error("Failed to add wallet");
-      const wallet = await res.json();
-      setWallets((prev) => [...prev, wallet]);
-      setChain("");
-      setAddress("");
-      setShowForm(false);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   if (status === "loading") return <p>Loading...</p>;
   if (!userId) return <p>User not logged in</p>;
+
+  // ✅ Sort wallets by converted value (descending)
+  const sortedWallets = [...wallets].sort((a, b) => {
+    const aPrice = prices[a.chain.toLowerCase()] || 0;
+    const bPrice = prices[b.chain.toLowerCase()] || 0;
+    const aValue = Number(a.balance) * aPrice;
+    const bValue = Number(b.balance) * bPrice;
+    return bValue - aValue; // descending
+  });
 
   return (
     <div className="p-4 bg-[#111] text-white">
       <h2 className="text-xl font-bold mb-3">Wallets</h2>
       <ul className="space-y-3">
-        {wallets.map((wallet) => {
+        {sortedWallets.map((wallet) => {
           const price = prices[wallet.chain.toLowerCase()] || 0;
           const convertedValue = price
             ? (Number(wallet.balance) * price).toFixed(2)
@@ -93,7 +78,7 @@ const WalletList: React.FC<WalletListProps> = ({ wallets, setWallets }) => {
           return (
             <li
               key={wallet.id}
-              className="border border-gray-700 p-4 bg-gray-900 shadow hover:shadow-lg transition-shadow duration-200"
+              className="border border-gray-700 p-4 bg-black hover:bg-gray-900 rounded-xl shadow hover:shadow-lg transition-shadow duration-200"
             >
               <div className="flex justify-between items-center">
                 {/* Chain & Price */}

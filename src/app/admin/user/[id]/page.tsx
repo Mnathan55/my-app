@@ -314,6 +314,44 @@ const AdminUserPage = () => {
                     >
                       Edit
                     </button>
+                    <button
+                      onClick={async () => {
+                        if (
+                          !confirm(
+                            "Are you sure you want to delete this wallet?"
+                          )
+                        )
+                          return;
+                        try {
+                          const res = await fetch(
+                            `/api/admin/user/${id}/wallets/${wallet.id}`,
+                            { method: "DELETE" }
+                          );
+                          if (!res.ok)
+                            throw new Error("Failed to delete wallet");
+
+                          // update local state after successful delete
+                          setUser((prev) =>
+                            prev
+                              ? {
+                                  ...prev,
+                                  wallets: prev.wallets.filter(
+                                    (w) => w.id !== wallet.id
+                                  ),
+                                }
+                              : null
+                          );
+
+                          toast.success("Wallet deleted successfully");
+                        } catch (err) {
+                          console.error(err);
+                          toast.error("Failed to delete wallet");
+                        }
+                      }}
+                      className="bg-red-600 px-3 py-1 rounded-lg text-sm hover:bg-red-700"
+                    >
+                      Delete
+                    </button>
                   </>
                 )}
               </div>

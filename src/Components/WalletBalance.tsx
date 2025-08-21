@@ -1,11 +1,24 @@
 "use client";
 
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon, ArrowsRightLeftIcon, EyeIcon, EyeSlashIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { useState } from "react";
+import { QrCodeIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+function ActionButton({ icon, label }: { icon: React.ReactNode; label: string }) {
+  const router = useRouter();
+  return (
+    <button onClick={() => router.push("/dashboard/sell")} className="flex flex-col px-9 items-center justify-center bg-[#F0F0F0] cursor-pointer rounded-lg py-3 hover:bg-[#e6e6e6] transition">
+      <div className="text-black">{icon}</div>
+      <span className="text-md font-semibold text-black mt-1">{label}</span>
+    </button>
+  );
+}
 
 export default function WalletBalance() {
+  
   const totalBalance = useSelector(
     (state: RootState) => state.totalBalance.value
   );
@@ -28,6 +41,12 @@ export default function WalletBalance() {
               <EyeSlashIcon className="w-6 h-6 text-gray-400" />
             )}
           </button>
+        </div>
+        <div className="flex flex-row justify-center items-center mt-4">
+          <ActionButton
+            icon={<ArrowPathIcon className="w-8 h-8" />}
+            label="Sell"
+          />
         </div>
       </div>
     </div>

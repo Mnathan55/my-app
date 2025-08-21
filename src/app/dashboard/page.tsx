@@ -31,7 +31,7 @@ export default function DashboardPage() {
 
   return (
     <main className="w-full bg-black">
-      <div className="max-w-3xl bg-[#111] w-full overflow-x-hidden mx-auto flex flex-col items-center">
+      <div className="max-w-2xl bg-[#111] w-full overflow-x-hidden mx-auto flex flex-col items-center">
         {/* Top header with logout button */}
         <div className="w-full px-4 py-5 flex justify-between items-center">
           <h1 className="text-3xl font-bold text-indigo-400">Dashboard</h1>

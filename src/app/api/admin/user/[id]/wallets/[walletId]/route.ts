@@ -35,3 +35,24 @@ export async function PATCH(
     return new NextResponse("Failed to update wallet", { status: 500 });
   }
 }
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ id: string; walletId: string }> }
+) {
+  const { walletId } = await params;
+
+  try {
+    await prisma.wallet.delete({
+      where: { id: walletId },
+    });
+
+    return NextResponse.json({ message: "Wallet deleted successfully" });
+  } catch (error) {
+    console.error("Delete Wallet Error:", error);
+    return NextResponse.json(
+      { error: "Failed to delete wallet" },
+      { status: 500 }
+    );
+  }
+}

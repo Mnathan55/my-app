@@ -21,7 +21,7 @@ model User {
   name          String?
   email         String    @unique
   emailVerified DateTime?
-  password       String? 
+  password      String? 
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -45,7 +45,7 @@ model Account {
   id_token          String?  @db.Text
   session_state     String?
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -56,7 +56,7 @@ model Session {
   userId       String
   expires      DateTime
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Wallet {
@@ -68,7 +68,7 @@ model Wallet {
   updatedAt DateTime    @updatedAt
 
   userId    String
-  user      User        @relation(fields: [userId], references: [id])
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
   transactions Transaction[]
 }
 
@@ -80,5 +80,5 @@ model Transaction {
   updatedAt DateTime    @updatedAt
 
   walletId  String
-  wallet    Wallet      @relation(fields: [walletId], references: [id])
+  wallet    Wallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
 }

@@ -282,7 +282,6 @@ export default function SellPage() {
                     setShowAssetModal(false);
                   }}
                 >
-                  <img src={asset.image} alt={asset.name} className="w-7 h-7" />
                   <div>
                     <p className="text-white">{asset.name}</p>
                     <p className="text-xs text-gray-400">{asset.mainnet}</p>

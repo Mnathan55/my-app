@@ -6,6 +6,7 @@ import FiatCurrencyModal from "@/Components/FiatCurrencyModal";
 import { FaAngleDown } from "react-icons/fa";
 import { FiArrowLeft } from "react-icons/fi";
 import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
 
 interface Transaction {
   id: string;
@@ -131,6 +132,7 @@ export default function SellPage() {
     flag: string;
   } | null>(null);
   const [amount, setAmount] = useState("");
+  const [recipient, setRecipient] = useState("");
   const [showAssetModal, setShowAssetModal] = useState(false);
   const [showFiatModal, setShowFiatModal] = useState(false);
 
@@ -154,12 +156,24 @@ export default function SellPage() {
       .catch(console.error);
   }, [userId]);
 
+  const handleSend = () => {
+    if (!recipient || !amount) {
+      toast.error("Please enter recipient and amount!");
+      return;
+    }
+
+    toast.success("✅ Sent successfully!");
+    setAmount("");
+    setRecipient("");
+  };
+
   return (
     <main className="w-full bg-black min-h-screen flex items-center justify-center px-4">
-      <div className="relative w-full h-screen md:h-[85vh] md:max-w-sm bg-gradient-to-b from-[#111] to-[#1a1a1a] md:rounded-2xl overflow-hidden shadow-xl border border-gray-800">
+      <Toaster position="top-right" reverseOrder={false} />
+      <div className="relative w-full h-screen md:h-[85vh] md:max-w-sm bg-gradient-to-b from-[#111] to-[#1a1a1a] md:rounded-2xl overflow-hidden shadow-xl border border-gray-800 flex flex-col">
         {/* Header Row */}
         <div className="relative flex items-center justify-center px-4 py-3 border-b border-gray-800">
-          {/* Back Button (left) */}
+          {/* Back Button */}
           <button
             onClick={() => router.back()}
             className="absolute left-4 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-800/80 text-sm text-gray-200 hover:bg-gray-700 hover:text-white transition-colors"
@@ -167,17 +181,17 @@ export default function SellPage() {
             <FiArrowLeft size={16} /> Back
           </button>
 
-          {/* Centered Title */}
+          {/* Title */}
           <button className="py-2 px-6 text-white font-medium relative">
             Sell
             <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-500 rounded-full"></span>
           </button>
         </div>
 
-        <div className="flex flex-col py-5">
-          {/* Wallet connect + country & currency */}
+        <div className="flex-1 overflow-y-auto scrollbar-hide">
+          {/* Wallet connect + currency */}
           <div className="flex items-center justify-between px-4 py-3">
-            <select className="bg-[#1a1a1a] text-gray-300 text-sm rounded-md px-3 py-2 w-40 border border-gray-700">
+            <select className="bg-black text-gray-300 text-sm rounded-md px-3 py-2 w-40 border border-gray-200">
               <option>Select Wallet</option>
               {wallets.map((wallet) => (
                 <option key={wallet.id} value={wallet.id}>
@@ -186,54 +200,49 @@ export default function SellPage() {
               ))}
             </select>
 
-            <div className="flex items-center">
-              <button
-                onClick={() => setShowFiatModal(true)}
-                className="bg-[#1a1a1a] flex flex-row items-center gap-2 text-gray-300 text-sm px-3 py-2 rounded-md border border-gray-700"
-              >
-                {selectedCurrency
-                  ? `${selectedCurrency.code}`
-                  : "Select Currency"}{" "}
-                <FaAngleDown />
-              </button>
-            </div>
+            <button
+              onClick={() => setShowFiatModal(true)}
+              className="bg-black flex flex-row items-center gap-2 text-gray-300 text-sm px-3 py-2 rounded-md border border-gray-200"
+            >
+              {selectedCurrency ? `${selectedCurrency.code}` : "Select Currency"}
+              <FaAngleDown />
+            </button>
           </div>
 
-          {/* Amount input */}
-          <div className="text-center py-6 flex justify-center items-center gap-2">
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => {
-                let val = e.target.value;
-
-                if (val.length > 1 && val.startsWith("0")) {
-                  val = val.replace(/^0+/, "");
-                }
-
-                if (val.startsWith("-")) {
-                  val = val.replace("-", "");
-                }
-
-                setAmount(val);
-              }}
-              className="text-4xl font-bold text-white bg-transparent border-none text-center focus:outline-none w-32 
-               [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              placeholder="0"
-              min="0"
-            />
-            {selectedAsset && (
-              <span className="text-2xl font-bold text-gray-300">
-                {selectedAsset.symbol}
-              </span>
-            )}
+          {/* Amount Input */}
+          <div className="px-4 py-3">
+            <p className="text-md font-semibold text-gray-200 mb-2">Amount</p>
+            <div className="flex items-center bg-[#1a1a1a] border border-gray-200 rounded-lg px-4 py-3">
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => {
+                  const val = e.target.value
+                    .replace(/^0+/, "")
+                    .replace("-", "");
+                  setAmount(val);
+                }}
+                className="flex-1 bg-transparent text-white placeholder-gray-500 text-2xl focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                placeholder="0"
+                min="0"
+              />
+              {selectedAsset && (
+                <span className="ml-2 text-2xl font-semibold text-gray-200">
+                  {selectedAsset.symbol}
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Asset selection */}
           <div className="px-4 py-3">
+            <p className="text-md font-semibold text-gray-200 mb-2">
+              Select asset to sell
+            </p>
+
             <div
               onClick={() => setShowAssetModal(true)}
-              className="bg-[#1a1a1a] border border-gray-700 rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer"
+              className="bg-[#1a1a1a] border border-gray-200 rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer"
             >
               {selectedAsset ? (
                 <div className="flex items-center gap-3">
@@ -252,6 +261,30 @@ export default function SellPage() {
               <span className="text-gray-400">▼</span>
             </div>
           </div>
+
+          {/* Recipient Input */}
+          <div className="px-4 py-3">
+            <p className="text-md font-semibold text-gray-200 mb-2">
+              Address
+            </p>
+            <input
+              type="text"
+              value={recipient}
+              onChange={(e) => setRecipient(e.target.value)}
+              className="w-full bg-[#1a1a1a] border border-gray-200 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              placeholder="Enter recipient address"
+            />
+          </div>
+        </div>
+
+        {/* Send Button */}
+        <div className="p-4 border-t border-gray-800">
+          <button
+            onClick={handleSend}
+            className="w-full bg-gradient-to-r bg-indigo-500 text-white py-3 rounded-xl font-medium hover:opacity-90 transition"
+          >
+            Send
+          </button>
         </div>
       </div>
 

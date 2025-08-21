@@ -131,3 +131,7 @@
     display: none;             /* Chrome, Safari */
   }
 }
+
+.react-hot-toast {
+  z-index: 9999 !important;
+}

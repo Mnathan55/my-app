@@ -21,10 +21,6 @@ export default function StackWalletLanding(){
           </div>
         </div>
 
-        {/* Language dropdown */}
-        <div className="flex items-center gap-4">
-          <button onClick={() => router.push("/auth/admin")} className="px-4 py-2 rounded-full bg-emerald-900 text-emerald-50 text-sm">Admin Login</button>
-        </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-6">

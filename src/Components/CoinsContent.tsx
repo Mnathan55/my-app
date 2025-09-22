@@ -9,45 +9,89 @@ interface Coin {
   id: string;
   name: string;
   symbol: string;
-  image: string;
+  
   receiveAddress: string;
 }
+
 
 const coinsData: Coin[] = [
   {
     id: "bitcoin",
     name: "Bitcoin",
     symbol: "BTC",
-    image: "/coins/bitcoin.png",
-    receiveAddress: "141LxgUA8TWQDbRPGqCx26pCJKuR7yg3pj",
+   receiveAddress: "141LxgUA8TWQDbRPGqCx26pCJKuR7yg3pj",
   },
   {
     id: "ethereum",
     name: "Ethereum",
     symbol: "ETH",
-    image: "/coins/ethereum.png",
+   
     receiveAddress: "0x94e2233871d9e2c86cdf3330435230a57fe3770b",
   },
   {
     id: "dogecoin",
     name: "Dogecoin",
     symbol: "DOGE",
-    image: "/coins/dogecoin.png",
+    
     receiveAddress: "DJxkCjHpgj7c2bTgB5WELiaTDKuKxHUHVz",
   },
   {
     id: "tron",
     name: "TRX Tron",
     symbol: "TRX",
-    image: "/coins/tron.png",
+   
     receiveAddress: "TQwJZfe7vjLq36mBS2JrURPz8UfTiciFGk",
   },
   {
     id: "tether",
     name: "USDT",
     symbol: "USDT",
-    image: "/coins/usdt.png",
+   
     receiveAddress: "0x94e2233871d9e2c86cdf3330435230a57fe3770b",
+  },
+
+  // ✅ New Coins
+  {
+    id: "solana",
+    name: "Solana",
+    symbol: "SOL",
+  
+    receiveAddress: "EavMuygaiSKgSDaBmQ7CMbFK9BSiBkmztvsVmbbwJD52",
+  },
+  {
+    id: "xrp",
+    name: "XRP",
+    symbol: "XRP",
+   
+    receiveAddress: "0x94e2233871d9e2c86cdf3330435230a57fe3770b",
+  },
+  {
+    id: "avax",
+    name: "Avalanche",
+    symbol: "AVAX",
+    
+    receiveAddress: "0x94e2233871d9e2c86cdf3330435230a57fe3770b",
+  },
+  {
+    id: "litecoin",
+    name: "Litecoin",
+    symbol: "LTC",
+   
+    receiveAddress: "LYwBCxpoui6XdsTKCk419inn1y85wrMzho",
+  },
+  {
+    id: "bnb",
+    name: "BNB",
+    symbol: "BNB",
+   
+    receiveAddress: "0x94e2233871d9e2c86cdf3330435230a57fe3770b",
+  },
+  {
+    id: "polkadot",
+    name: "Polkadot",
+    symbol: "DOT",
+
+    receiveAddress: "166vh36wmE62Q6k4XKjxtCPTqqfMwfZ5imAxdPkEs25cpmtb",
   },
 ];
 

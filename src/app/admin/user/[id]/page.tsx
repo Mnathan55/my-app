@@ -167,6 +167,13 @@ const AdminUserPage = () => {
             <option value="tron">Tron</option>
             <option value="tether">Tether</option>
             <option value="dogecoin">Dogecoin</option>
+            <option value="dogecoin">Dogecoin</option>
+            <option value="solana">Solana</option>
+            <option value="ripple">XRP</option>
+            <option value="avalanche-2">Avalanche</option>
+            <option value="litecoin">Litecoin</option>
+            <option value="binancecoin">BNB</option>
+            <option value="polkadot">Polkadot</option>
           </select>
 
           <input

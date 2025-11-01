@@ -16,7 +16,15 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json(users);
+    // Add kycStatus, adhar, and pan to each user
+    const usersWithKyc = users.map(user => ({
+      ...user,
+      kycStatus: user.kycStatus,
+      adhar: user.adhar,
+      pan: user.pan,
+    }));
+
+    return NextResponse.json(usersWithKyc);
   } catch (err) {
     console.error("GET /api/admin/users error:", err);
     return new NextResponse("Internal Server Error", { status: 500 });

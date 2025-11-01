@@ -2,8 +2,9 @@
 import React, { useState } from "react";
 import WalletList from "./WalletList";
 import CoinsContent from "./CoinsContent";
+import KYCForm from "./KYCForm";
 import { Wallet } from "next-auth";
-import { Wallet as WalletIcon, DollarSign } from "lucide-react";
+import { Wallet as WalletIcon, DollarSign, FileText } from "lucide-react";
 
 
 interface WalletListProps {
@@ -26,6 +27,7 @@ const TabbedSection: React.FC<WalletListProps> = ({ wallets, setWallets }) => {
         {[
           { id: "wallet", label: "Wallets", Icon: WalletIcon },
           { id: "coins", label: "Coins", Icon: DollarSign },
+          { id: "kyc", label: "KYC", Icon: FileText },
         ].map(({ id, label, Icon }) => {
           const isActive = activeTab === id;
           return (
@@ -35,7 +37,7 @@ const TabbedSection: React.FC<WalletListProps> = ({ wallets, setWallets }) => {
               aria-selected={isActive}
               aria-controls={`${id}-tab`}
               id={`${id}-tab-btn`}
-              onClick={() => setActiveTab(id as "coins" | "wallet")}
+              onClick={() => setActiveTab(id as "coins" | "wallet" | "kyc")}
               className={`flex items-center justify-center gap-2 flex-1 p-4 font-semibold text-sm transition-colors duration-200
                 ${
                   isActive
@@ -53,8 +55,10 @@ const TabbedSection: React.FC<WalletListProps> = ({ wallets, setWallets }) => {
       <section className="py-6 px-2">
         {activeTab === "wallet" ? (
           <WalletList wallets={wallets} setWallets={setWallets} />
-        ) : (
+        ) : activeTab === "coins" ? (
           <CoinsContent />
+        ) : (
+          <KYCForm />
         )}
       </section>
     </div>

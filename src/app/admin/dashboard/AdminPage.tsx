@@ -17,6 +17,9 @@ interface User {
   name?: string | null;
   email?: string | null;
   wallets: Wallet[];
+  kycStatus: string;
+  adhar?: string | null;
+  pan?: string | null;
 }
 
 function AdminDashboard() {
@@ -57,6 +60,44 @@ function AdminDashboard() {
     }
   }
 
+  async function handleApproveKyc(userId: string) {
+    try {
+      const res = await fetch(`/api/admin/kyc/${userId}/approve`, {
+        method: "PUT",
+      });
+      if (!res.ok) throw new Error("Failed to approve KYC");
+
+      toast.success("KYC approved successfully");
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.id === userId ? { ...u, kycStatus: "APPROVED" } : u
+        )
+      );
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to approve KYC");
+    }
+  }
+
+  async function handleRejectKyc(userId: string) {
+    try {
+      const res = await fetch(`/api/admin/kyc/${userId}/reject`, {
+        method: "PUT",
+      });
+      if (!res.ok) throw new Error("Failed to reject KYC");
+
+      toast.success("KYC rejected successfully");
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.id === userId ? { ...u, kycStatus: "REJECTED" } : u
+        )
+      );
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to reject KYC");
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#111] text-gray-300">
@@ -92,7 +133,16 @@ function AdminDashboard() {
                 Email
               </th>
               <th className="p-4 text-left text-sm font-semibold text-gray-300">
+                Aadhaar
+              </th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-300">
+                PAN
+              </th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-300">
                 Wallets
+              </th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-300">
+                KYC Status
               </th>
               <th className="p-4 text-left text-sm font-semibold text-gray-300">
                 Actions
@@ -119,6 +169,16 @@ function AdminDashboard() {
                     <span className="italic text-gray-500">No Email</span>
                   )}
                 </td>
+                <td className="p-4 text-sm text-gray-400">
+                  {user.adhar || (
+                    <span className="italic text-gray-500">Not Provided</span>
+                  )}
+                </td>
+                <td className="p-4 text-sm text-gray-400">
+                  {user.pan || (
+                    <span className="italic text-gray-500">Not Provided</span>
+                  )}
+                </td>
                 <td className="p-4">
                   <span
                     className={`px-3 py-1 text-xs font-medium rounded-full ${
@@ -130,6 +190,37 @@ function AdminDashboard() {
                     {user.wallets.length} Wallet
                     {user.wallets.length !== 1 ? "s" : ""}
                   </span>
+                </td>
+                <td className="p-4">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`px-3 py-1 text-xs font-medium rounded-full ${
+                        user.kycStatus === "APPROVED"
+                          ? "bg-green-500/20 text-green-400"
+                          : user.kycStatus === "REJECTED"
+                          ? "bg-red-500/20 text-red-400"
+                          : "bg-yellow-500/20 text-yellow-400"
+                      }`}
+                    >
+                      {user.kycStatus}
+                    </span>
+                    {user.kycStatus === "PENDING" && (
+                      <div className="flex gap-1">
+                        <button
+                          onClick={() => handleApproveKyc(user.id)}
+                          className="px-2 py-1 bg-green-600 text-white text-xs font-semibold rounded hover:bg-green-700 transition"
+                        >
+                          Approve
+                        </button>
+                        <button
+                          onClick={() => handleRejectKyc(user.id)}
+                          className="px-2 py-1 bg-red-600 text-white text-xs font-semibold rounded hover:bg-red-700 transition"
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </td>
                 <td className="p-4 text-sm">
                   <button

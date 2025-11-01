@@ -7,6 +7,8 @@ import { FaAngleDown } from "react-icons/fa";
 import { FiArrowLeft } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface Transaction {
   id: string;
@@ -122,6 +124,7 @@ export default function SellPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const userId = session?.user?.id;
+  const totalBalance = useSelector((state: RootState) => state.totalBalance.value);
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [filteredAssets, setFilteredAssets] = useState<Asset[]>([]);
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
@@ -135,10 +138,13 @@ export default function SellPage() {
   const [recipient, setRecipient] = useState("");
   const [showAssetModal, setShowAssetModal] = useState(false);
   const [showFiatModal, setShowFiatModal] = useState(false);
+  const [kycStatus, setKycStatus] = useState<string>("");
 
-  // fetch wallets
+  // fetch wallets and user KYC status
   useEffect(() => {
     if (!userId) return;
+
+    // Fetch wallets
     fetch(`/api/wallet?userId=${userId}`)
       .then((res) => res.json())
       .then((data: Wallet[]) => {
@@ -152,6 +158,14 @@ export default function SellPage() {
         setFilteredAssets(matched);
 
         if (matched.length > 0) setSelectedAsset(matched[0]);
+      })
+      .catch(console.error);
+
+    // Fetch user KYC status
+    fetch(`/api/admin/user/${userId}`)
+      .then((res) => res.json())
+      .then((userData) => {
+        setKycStatus(userData.kycStatus || "PENDING");
       })
       .catch(console.error);
   }, [userId]);
@@ -189,6 +203,34 @@ export default function SellPage() {
         </div>
 
         <div className="flex-1 overflow-y-auto scrollbar-hide">
+          {/* Total Balance Display */}
+          <div className="px-4 py-3">
+            <div className="bg-[#1a1a1a] border border-gray-200 rounded-lg px-4 py-3">
+              <p className="text-sm text-gray-400">Total Balance</p>
+              <p className="text-2xl font-bold text-white">${totalBalance.toFixed(2)}</p>
+            </div>
+          </div>
+
+          {/* KYC Status Display */}
+          <div className="px-4 py-3">
+            <div className={`bg-[#1a1a1a] border rounded-lg px-4 py-3 ${
+              kycStatus === "APPROVED" ? "border-green-500" :
+              kycStatus === "REJECTED" ? "border-red-500" :
+              "border-yellow-500"
+            }`}>
+              <p className="text-sm text-gray-400">KYC Status</p>
+              <p className={`text-lg font-semibold ${
+                kycStatus === "APPROVED" ? "text-green-400" :
+                kycStatus === "REJECTED" ? "text-red-400" :
+                "text-yellow-400"
+              }`}>
+                {kycStatus === "APPROVED" ? "✅ KYC Approved" :
+                 kycStatus === "REJECTED" ? "❌ KYC Rejected" :
+                 "⏳ KYC Pending"}
+              </p>
+            </div>
+          </div>
+
           {/* Wallet connect + currency */}
           <div className="flex items-center justify-between px-4 py-3">
             <select className="bg-black text-gray-300 text-sm rounded-md px-3 py-2 w-40 border border-gray-200">

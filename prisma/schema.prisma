@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Admin {
@@ -16,36 +17,43 @@ model Admin {
   updatedAt DateTime @updatedAt
 }
 
+enum KycStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
   email         String    @unique
   emailVerified DateTime?
-  password      String? 
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-
-  wallets       Wallet[]
+  password      String?
+  adhar         String?
+  pan           String?
+  kycStatus     KycStatus @default(PENDING)
   accounts      Account[]
   sessions      Session[]
+  wallets       Wallet[]
 }
 
 model Account {
-  id                String   @id @default(cuid())
+  id                String  @id @default(cuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String?  @db.Text
-  access_token      String?  @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?  @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -55,30 +63,27 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Wallet {
-  id        String      @id @default(cuid())
-  chain     String
-  address   String      @unique
-  balance   Decimal     @default(0)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-
-  userId    String
-  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String        @id @default(cuid())
+  chain        String
+  address      String        @unique
+  balance      Decimal       @default(0)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  userId       String
   transactions Transaction[]
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Transaction {
-  id        String      @id @default(cuid())
+  id        String   @id @default(cuid())
   type      String
   amount    Decimal
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   walletId  String
-  wallet    Wallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  wallet    Wallet   @relation(fields: [walletId], references: [id], onDelete: Cascade)
 }

@@ -35,6 +35,8 @@ model User {
   adhar         String?
   pan           String?
   kycStatus     KycStatus @default(PENDING)
+  resetToken    String?
+  resetTokenExpiry DateTime?
   accounts      Account[]
   sessions      Session[]
   wallets       Wallet[]

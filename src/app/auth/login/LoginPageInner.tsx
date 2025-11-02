@@ -87,7 +87,17 @@ export default function LoginPageInner() {
 
           <div className="my-4 text-gray-400">OR</div>
 
-          {/* Google Button */}
+          {/* Forgot Password Link */}
+          <div className="text-center">
+            <button
+              onClick={() => router.push("/auth/forgot-password")}
+              className="text-indigo-600 hover:text-indigo-500 text-sm"
+            >
+              Forgot Password?
+            </button>
+          </div>
+
+          {/* Register Button */}
           <button
             onClick={() => router.push("/auth/register")}
             className="w-full flex items-center justify-center gap-3 bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-gray-800"
